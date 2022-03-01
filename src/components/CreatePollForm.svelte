@@ -1,4 +1,5 @@
 <script>
+  import Button from "../shared/Button.svelte";
   let fields = {
     question: "",
     answerA: "",
@@ -42,7 +43,8 @@
         placeholder="Answer B"
       />
     </div>
-    <button type="submit">Add Question</button>
+    <!-- <button type="submit">Add Question</button> -->
+    <Button type="secondary" flat={true}>Add Poll</Button>
   </form>
 </div>
 
@@ -50,10 +52,11 @@
   form {
     width: 480px;
     margin: 0 auto;
-    padding: 12px;
+    padding: 20px;
     border: 1px solid silver;
     border-radius: 4px;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+    text-align: center;
   }
   input {
     width: 100%;
@@ -66,6 +69,7 @@
   }
   .form-field {
     margin: 18px 0;
+    text-align: left;
   }
   button {
     width: 100%;
