@@ -1,14 +1,66 @@
 <script>
+  import { createEventDispatcher } from "svelte";
   import Button from "../shared/Button.svelte";
+
+  let dispatcher = createEventDispatcher();
   let fields = {
     question: "",
     answerA: "",
     answerB: "",
   };
-  const submitHandler = () => {
-    console.log(fields);
+  let error = {
+    question: "",
+    answerA: "",
+    answerB: "",
   };
-  // let question, answerA, answerB;
+
+  let isValid = false;
+
+  const submitHandler = () => {
+    isValid = true;
+    for (const key in fields) {
+      checkIsValid(key);
+    }
+
+    // add poll
+    if (isValid) {
+      dispatcher("addPool", fields);
+      isValid = false;
+      fields.question = "";
+      fields.answerA = "";
+      fields.answerB = "";
+    }
+  };
+
+  const checkIsValid = (key) => {
+    let val = fields[key];
+
+    if (key === "question") {
+      if (val.trim().length < 5) {
+        isValid = false;
+
+        error[key] = "question must be least 5 characters long";
+      } else {
+        error[key] = "";
+      }
+    }
+    if (key === "answerA") {
+      if (val.trim().length < 1) {
+        isValid = false;
+        error[key] = "answer a can not be empty";
+      } else {
+        error[key] = "";
+      }
+    }
+    if (key === "answerB") {
+      if (val.trim().length < 1) {
+        isValid = false;
+        error[key] = "answer b can not be empty";
+      } else {
+        error[key] = "";
+      }
+    }
+  };
 </script>
 
 <div>
@@ -20,9 +72,13 @@
         name="question"
         bind:value={fields.question}
         id="question"
-        placeholder="Question"
+        placeholder="Enter Your Question"
       />
+      <div class="error" class:error-show={error.question.length != ""}>
+        {error.question}
+      </div>
     </div>
+
     <div class="form-field">
       <label for="answer-a">Answer A</label>
       <input
@@ -30,9 +86,13 @@
         name="answer-a"
         bind:value={fields.answerA}
         id="answer-a"
-        placeholder="Answer A"
+        placeholder="Enter Answer For A"
       />
+      <div class="error" class:error-show={error.answerA.length != ""}>
+        {error.answerA}
+      </div>
     </div>
+
     <div class="form-field">
       <label for="answer-b">Answer B</label>
       <input
@@ -40,8 +100,11 @@
         name="answer-b"
         bind:value={fields.answerB}
         id="answer-b"
-        placeholder="Answer B"
+        placeholder="Enter Answer For B"
       />
+      <div class="error" class:error-show={error.answerB.length != ""}>
+        {error.answerB}
+      </div>
     </div>
     <!-- <button type="submit">Add Question</button> -->
     <Button type="secondary" flat={true}>Add Poll</Button>
@@ -57,6 +120,9 @@
     border-radius: 4px;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
     text-align: center;
+  }
+  label {
+    font-weight: 600;
   }
   input {
     width: 100%;
@@ -85,5 +151,32 @@
   button:hover {
     cursor: pointer;
     background-color: rgb(248, 110, 60);
+  }
+
+  .error {
+    display: none;
+  }
+  .error-show {
+    display: block;
+    color: rgb(218, 12, 12);
+    text-transform: capitalize;
+    font-size: 0.8rem;
+    font-weight: 500;
+    /* animation-name: error-show-animation; */
+    /* animation-duration: 4; */
+    animation: error-show-animation 2s infinite;
+    position: relative;
+  }
+
+  @keyframes error-show-animation {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
   }
 </style>

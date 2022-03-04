@@ -11,6 +11,10 @@
   const changeTabHandler = (event) => {
     activeItem = event.detail;
   };
+  const addPoolHandler = (event) => {
+    console.log("event.detail->", event.detail);
+    activeItem = "Current Polls";
+  };
 </script>
 
 <Header />
@@ -19,7 +23,7 @@
   {#if activeItem === "Current Polls"}
     <p>Current Polls</p>
   {:else}
-    <CreatePollForm />
+    <CreatePollForm on:addPool={addPoolHandler} />
   {/if}
 </main>
 <Footer />
