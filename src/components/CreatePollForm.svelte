@@ -24,7 +24,14 @@
 
     // add poll
     if (isValid) {
-      dispatcher("addPool", fields);
+      let data = {
+        ...fields,
+        cntA: 0,
+        cntB: 0,
+        id: ~~(Math.random() * 1000000),
+      };
+
+      dispatcher("addPool", data);
       isValid = false;
       fields.question = "";
       fields.answerA = "";
@@ -113,13 +120,12 @@
 
 <style>
   form {
+    text-align: center;
     width: 480px;
     margin: 0 auto;
     padding: 20px;
-    border: 1px solid silver;
     border-radius: 4px;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
-    text-align: center;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.125);
   }
   label {
     font-weight: 600;

@@ -5,7 +5,6 @@
 
   export let items;
   export let activeItem;
-  console.log(items, activeItem);
 </script>
 
 <div class="tabs">
