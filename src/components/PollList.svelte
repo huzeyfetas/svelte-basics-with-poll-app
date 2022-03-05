@@ -1,12 +1,29 @@
 <script>
+  import { onMount, onDestroy } from "svelte";
+  import PollStore from "../store/PollStore";
   import PollDetail from "./PollDetail.svelte";
   import Card from "../shared/Card.svelte";
 
-  export let polls;
+  let polls;
+
+  //subscribe & unsubscribe
+  /*   let unsubscribe;
+
+  onMount(() => {
+    console.log("poolist cmpt mounted");
+    unsubscribe = PollStore.subscribe((data) => {
+      polls = data;
+    });
+  });
+
+  onDestroy(() => {
+    console.log("polllist cmpt destroyed");
+    unsubscribe();
+  }); */
 </script>
 
 <div class="poll-list">
-  {#each polls as poll}
+  {#each $PollStore as poll (poll.id)}
     <Card>
       <PollDetail {poll} on:vote />
     </Card>

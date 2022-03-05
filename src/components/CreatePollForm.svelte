@@ -1,5 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
+  import PollStore from "../store/PollStore";
   import Button from "../shared/Button.svelte";
 
   let dispatcher = createEventDispatcher();
@@ -31,7 +32,10 @@
         id: ~~(Math.random() * 1000000),
       };
 
-      dispatcher("addPool", data);
+      PollStore.update((currentPolls) => {
+        return [data, ...currentPolls];
+      });
+      dispatcher("addPool");
       isValid = false;
       fields.question = "";
       fields.answerA = "";
@@ -113,7 +117,6 @@
         {error.answerB}
       </div>
     </div>
-    <!-- <button type="submit">Add Question</button> -->
     <Button type="secondary" flat={true}>Add Poll</Button>
   </form>
 </div>

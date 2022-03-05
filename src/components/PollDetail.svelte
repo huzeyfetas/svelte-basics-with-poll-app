@@ -1,7 +1,6 @@
 <script>
-  import { createEventDispatcher } from "svelte";
-
-  let dispatcher = createEventDispatcher();
+  import PollStore from "../store/PollStore";
+  import Button from "../shared/Button.svelte";
 
   export let poll;
   $: cntTotal = poll.cntA + poll.cntB;
@@ -12,7 +11,26 @@
   }
   const voteHandler = (val) => {
     let id = poll.id;
-    dispatcher("vote", { id, val });
+
+    PollStore.update((currentPolls) => {
+      currentPolls.map((p) => {
+        if (p.id === id) {
+          if (val === "A") {
+            p.cntA++;
+          } else {
+            p.cntB++;
+          }
+        }
+      });
+      return [...currentPolls];
+    });
+  };
+
+  const deleteHandler = (id) => {
+    PollStore.update((currentPolls) => {
+      return currentPolls.filter((p) => p.id !== id);
+    });
+    console.log("delete");
   };
 </script>
 
@@ -27,12 +45,9 @@
     <div class="percent percent-b" style="width: {percentB}%;" />
     <span>{poll.answerB} ({poll.cntB})</span>
   </div>
-  <!-- <button on:click={(e) => voteHandlerxxx(poll.id, "A")}
-    >{poll.answerA} -> {poll.cntA}</button
-  >
-  <button on:click={(e) => voteHandlerxxx(poll.id, "B")}
-    >{poll.answerB} -> {poll.cntB}</button
-  > -->
+  <div class="btn-container">
+    <Button flat={true} on:click={(e) => deleteHandler(poll.id)}>Delete</Button>
+  </div>
 </div>
 
 <style>
@@ -75,5 +90,11 @@
   .percent-b {
     border-left: 4px solid #45c496;
     background: rgba(69, 196, 150, 0.2);
+  }
+  .btn-container {
+    margin-top: 2.2rem;
+    text-align: center;
+  }
+  .btn-container button {
   }
 </style>
