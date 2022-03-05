@@ -1,8 +1,9 @@
 <script>
+  import { fade, scale, slide } from "svelte/transition";
+  import { flip } from "svelte/animate";
   import { onMount, onDestroy } from "svelte";
   import PollStore from "../store/PollStore";
   import PollDetail from "./PollDetail.svelte";
-  import Card from "../shared/Card.svelte";
 
   let polls;
 
@@ -24,11 +25,11 @@
 
 <div class="poll-list">
   {#each $PollStore as poll (poll.id)}
-    <Card>
+    <div in:fade out:scale|local animate:flip={{ duration: 500 }}>
       <PollDetail {poll} on:vote />
-    </Card>
+    </div>
   {:else}
-    <p id="no-poll-txt">
+    <p id="no-poll-txt" transition:slide>
       There is no poll. Click above "Add New Poll" button for creating poll
     </p>
   {/each}

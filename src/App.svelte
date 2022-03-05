@@ -1,5 +1,4 @@
 <script>
-  import PollStore from "./store/PollStore";
   import Header from "./components/Header.svelte";
   import PollList from "./components/PollList.svelte";
   import Footer from "./components/Footer.svelte";
@@ -14,21 +13,6 @@
   };
 
   const addPoolHandler = () => (activeItem = "Current Polls");
-
-  const voteHandler = (event) => {
-    let id = event.detail.id;
-    let vote = event.detail.val;
-    polls.map((p) => {
-      if (p.id === id) {
-        if (vote === "A") {
-          p.cntA++;
-        } else {
-          p.cntB++;
-        }
-      }
-    });
-    polls = [...polls];
-  };
 </script>
 
 <Header />

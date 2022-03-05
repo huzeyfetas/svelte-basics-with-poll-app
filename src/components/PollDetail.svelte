@@ -1,11 +1,17 @@
 <script>
   import PollStore from "../store/PollStore";
+  import Card from "../shared/Card.svelte";
   import Button from "../shared/Button.svelte";
+  import { tweened } from "svelte/motion";
 
   export let poll;
   $: cntTotal = poll.cntA + poll.cntB;
-  $: percentA = Math.floor((100 / cntTotal) * poll.cntA);
-  $: percentB = Math.floor((100 / cntTotal) * poll.cntB);
+  $: percentA = Math.floor((100 / cntTotal) * poll.cntA) || 0;
+  $: percentB = Math.floor((100 / cntTotal) * poll.cntB) || 0;
+  const tweenedA = tweened(0);
+  const tweenedB = tweened(0);
+  $: tweenedA.set(percentA);
+  $: tweenedB.set(percentB);
   $: {
     console.log(cntTotal, percentA, percentB);
   }
@@ -34,21 +40,25 @@
   };
 </script>
 
-<div class="poll-list-item">
-  <h3>{poll.question}</h3>
-  <p>Total Votes : <span class="cnt-total">{cntTotal}</span></p>
-  <div class="answer" on:click={(e) => voteHandler("A")}>
-    <div class="percent percent-a" style="width: {percentA}%;" />
-    <span>{poll.answerA} ({poll.cntA})</span>
+<Card>
+  <div class="poll-list-item">
+    <h3>{poll.question}</h3>
+    <p>Total Votes : <span class="cnt-total">{cntTotal}</span></p>
+    <div class="answer" on:click={(e) => voteHandler("A")}>
+      <div class="percent percent-a" style="width: {$tweenedA}%;" />
+      <span>{poll.answerA} ({poll.cntA})</span>
+    </div>
+    <div class="answer" on:click={(e) => voteHandler("B")}>
+      <div class="percent percent-b" style="width: {$tweenedB}%;" />
+      <span>{poll.answerB} ({poll.cntB})</span>
+    </div>
+    <div class="btn-container">
+      <Button flat={true} on:click={(e) => deleteHandler(poll.id)}
+        >Delete</Button
+      >
+    </div>
   </div>
-  <div class="answer" on:click={(e) => voteHandler("B")}>
-    <div class="percent percent-b" style="width: {percentB}%;" />
-    <span>{poll.answerB} ({poll.cntB})</span>
-  </div>
-  <div class="btn-container">
-    <Button flat={true} on:click={(e) => deleteHandler(poll.id)}>Delete</Button>
-  </div>
-</div>
+</Card>
 
 <style>
   .poll-list-item > h3 {
